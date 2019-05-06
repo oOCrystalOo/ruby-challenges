@@ -5,26 +5,6 @@ class LinkedListNode
     @value = value
     @next_node = next_node
   end
-  
-  def print_values (list_node)
-    if list_node 
-      print "#{list_node.value} --> "
-      print_values(list_node.next_node)
-    else
-      print "nil\n"
-      return
-    end
-  end
-  
-  def reverse_list (list) 
-    stack = Stack.new
-    while list
-      stack.push(list.value)
-      list = list.next_node
-    end
-    
-    print_values(stack.data)
-  end
 end
 
 class Stack
@@ -48,10 +28,61 @@ class Stack
   end
 end
 
+def print_values (list_node)
+    if list_node 
+      print "#{list_node.value} --> "
+      print_values(list_node.next_node)
+    else
+      print "nil\n"
+      return
+    end
+  end
+  
+#reverse linkedlist with stack
+def old_reverse_list (list) 
+  stack = Stack.new
+  while list
+    stack.push(list.value)
+    list = list.next_node
+  end
+
+  print_values(stack.data)
+end
+
+
+# Reverse linkedlist with mutation
+def reverse_list (list, previous = nil)
+  if list
+    next_node = list.next_node
+    list.next_node = previous
+    reverse_list(next_node, list)
+  end
+  puts list.inspect
+end
+
+# Check if linkedlist is infinite
+def is_infinite(list)
+  node = list
+  while (list.next_node)
+    list = list.next_node
+    if list == node
+      return true
+    end
+  end
+  return false
+end
+
 node1 = LinkedListNode.new(37)
 node2 = LinkedListNode.new(99, node1)
 node3 = LinkedListNode.new(12, node2)
 
-node3.print_values(node3)
+print_values(node3)
+#old_reverse_list(node3)
 
-node3.reverse_list(node3)
+node1.next_node = node3
+puts is_infinite(node3)
+
+node1.next_node = nil
+puts is_infinite(node3)
+
+# reverse_list(node3)
