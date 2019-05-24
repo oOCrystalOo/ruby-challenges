@@ -54,10 +54,12 @@ end
 def reverse_list (list, previous = nil)
   if list
     next_node = list.next_node
+   # puts "Next node is: " + next_node.inspect
     list.next_node = previous
+   # puts "Previous node is: " + previous.inspect
     reverse_list(next_node, list)
   end
-  puts list.inspect
+  # puts list.inspect
 end
 
 # Check if linkedlist is infinite
@@ -85,4 +87,5 @@ puts is_infinite(node3)
 node1.next_node = nil
 puts is_infinite(node3)
 
-# reverse_list(node3)
+reverse_list(node3)
+print_values(node1)
