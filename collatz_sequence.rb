@@ -7,46 +7,41 @@ def collatz (num)
       array << (array.last * 3) + 1
     end
   end
-  return array
+  
+  mini_hash = Hash.new
+  array.reverse.each_with_index do |x, index| 
+    if !mini_hash[x]
+      mini_hash[x] = array[index..array.length - 1]
+    end
+  end
+  
+  return mini_hash
 end
 
-def get_largest_chain(num)
-  largest_count = 1
-  largest_array = []
+def get_largest_chain_length (end_num) 
+  count = 0
+  number_with_largest_chain = 1
+  collatz_hash = Hash.new
   
-  arrays = Array.new(num)
-  n = 1
-  while n <= num
-    if arrays[n - 1].nil?
-      if n % 2 == 0
-        if !arrays[(n / 2) - 1].nil?
-          current_array = Marshal.load(Marshal.dump(arrays[(n / 2) - 1]))
-          current_array.unshift(n)
-          arrays[n - 1] = current_array
-        else
-          arrays[n - 1] = collatz(n)
-        end
-      else
-        if n > 1 && n * 3 <= num
-          #set an array ahead of time
-          arrays[n * 3] = collatz((n * 3) + 1)
-          current_array = Marshal.load(Marshal.dump(arrays[n * 3]))
-          current_array.unshift(n)
-          arrays[n - 1] = current_array
-        else
-          arrays[n - 1] = collatz(n)
+  i = end_num
+  while i > 0
+    if !collatz_hash[i]
+      mini_hash = collatz(i)
+      mini_hash.each do |key, value|
+        if !collatz_hash[key]
+          collatz_hash[key] = value
+          if value.length > count
+            count = value.length
+            number_with_largest_chain = key
+          end
         end
       end
     end
-    if arrays[n - 1].length > largest_count
-      largest_count = arrays[n - 1].length
-      largest_array = arrays[n - 1]
-    end
-    
-    n = n + 1
+    i = i - 1
   end
   
-  return largest_array
+  puts "Number with the largest chain is #{number_with_largest_chain} with #{count} items."
+  puts collatz_hash[number_with_largest_chain].inspect
 end
 
-puts get_largest_chain(100000).inspect
+get_largest_chain_length(1000000)
